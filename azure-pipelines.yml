@@ -53,7 +53,7 @@ stages:
               onTimeout: 'resume'
       - job: Applyinfra
         steps:
-          - template: infratemplate
+          - template: infratemplate.yaml
           - task: TerraformTask@5
             inputs:
               provider: 'azurerm'
