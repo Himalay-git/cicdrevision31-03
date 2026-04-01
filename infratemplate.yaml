@@ -1,0 +1,12 @@
+        steps:
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              workingDirectory: '$(WRKDIR)'
+              backendServiceArm: 'Newconnection'
+              backendAzureRmOverrideSubscriptionID: 'f9fb190e-2a79-4b5f-b614-0f469a025fb0'
+              backendAzureRmResourceGroupName: 'gonu'
+              backendAzureRmStorageAccountName: 'gonustore'
+              backendAzureRmContainerName: 'gonustorecontainer'
+              backendAzureRmKey: 'develpment.terraform.tfstate'
