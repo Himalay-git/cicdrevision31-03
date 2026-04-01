@@ -1,4 +1,3 @@
-
 trigger: none
 
 pool:
@@ -34,12 +33,30 @@ stages:
       - job: test
         steps:
           - task: PowerShell@2
-            displayName: checkov
-            continueOnError: true
             inputs:
-              filePath: 'checkov -d "$(System.DefaultWorkingDirectory)" -o junitxml > checkovres.xml'
+              targetType: 'inline'
+              script: 'checkov -d "$(System.DefaultWorkingDirectory)" -o junitxml > checkovres.xml'
           - task: PublishTestResults@2
             displayName: test result
             inputs:
               testResultsFormat: 'JUnit'
               testResultsFiles: 'checkovres.xml'
+
+  - stage: CD
+    jobs:
+      - job: manualapproval
+        pool: server
+        steps:
+          - task: ManualIntervention@8
+            inputs:
+              emailRecipients: 'himalya@neerajyadav1994outlook.onmicrosoft.com'
+              onTimeout: 'resume'
+      - job: Applyinfra
+        steps:
+          - template: infratemplate
+          - task: TerraformTask@5
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              workingDirectory: '$(WRKDIR)'
+              environmentServiceNameAzureRM: 'Newconnection'
